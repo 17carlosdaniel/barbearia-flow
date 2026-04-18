@@ -1,0 +1,41 @@
+---
+description: Mapa visual do site BarberFlow – onde mudar cores, sidebar, botões e páginas
+alwaysApply: true
+---
+
+# BarberFlow – Referência visual
+
+Use este mapa quando o usuário pedir mudança de cor, layout ou elemento visual.
+
+## Cores e tema (global)
+- **Arquivo:** `src/index.css`
+- **Variáveis CSS (dark):** `--background`, `--foreground`, `--card`, `--primary`, `--primary-foreground`, `--border`, `--muted`, `--destructive`, etc. (valores HSL em `:root, .light` e `.dark`)
+- **Classes utilitárias:** `.text-gradient-gold`, `.bg-gradient-gold`, `.bg-gradient-dark`, `.glass-card`, `.glow-gold`
+
+## Sidebar e menu
+- **Arquivo:** `src/components/DashboardLayout.tsx`
+- **Sidebar desktop:** `<aside>` com logo, `nav` (links), botão Sair
+- **Item ativo do menu:** `active ? "bg-primary text-primary-foreground"`
+- **Item inativo:** `text-muted-foreground hover:text-foreground hover:bg-secondary`
+- **Botão Sair:** ícone `ArrowLeft` + texto "Sair"; classes em desktop e no overlay mobile
+
+## Botões
+- **Arquivo:** `src/components/ui/button.tsx`
+- **Variantes:** `default` (dourado), `outline`, `outlineGold` (borda dourada), `destructive`, `secondary`, `ghost`, `link`
+- **Tamanhos:** `default`, `sm`, `lg`, `icon`
+
+## Páginas principais
+- **Landing:** `src/pages/Index.tsx` – hero com logo, título, "Entrar" (gradient gold), "Criar Conta" (outlineGold)
+- **Login:** `src/pages/Login.tsx`
+- **Cadastro:** `src/pages/Register.tsx`
+- **Dashboard barbeiro:** `src/pages/barber/BarberDashboard.tsx`
+- **Dashboard cliente:** `src/pages/client/ClientDashboard.tsx`
+- **Buscar barbearias:** `src/pages/client/ClientSearch.tsx`
+- **Detalhe barbearia:** `src/pages/client/ClientBarbershopDetail.tsx`
+- **Minha Barbearia:** `src/pages/barber/BarberMyShop.tsx` — abas: Dados, Redes, Horários, Fotos (sem abas Serviços/Promoções no mapa; catálogo em **Serviços**)
+- **Serviços:** `src/pages/barber/BarberServices.tsx`
+- **Guia:** `src/pages/Guide.tsx`
+
+## Cards e containers
+- **Classe:** `glass-card` (definida em `index.css`: fundo `--card`, borda, `rounded-xl`)
+- **Uso:** várias páginas usam `className="glass-card ..."` ou `bg-card` para blocos escuros

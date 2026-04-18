@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Segurança: reduzir riscos de XSS, clickjacking e MIME sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Barbeflow - Sistema para Barbearias</title>
+    <meta name="description" content="Barbeflow - Sistema completo de gestão para barbearias" />
+    <meta name="author" content="Barbeflow" />
+
+    <meta property="og:title" content="Barbeflow" />
+    <meta property="og:description" content="Sistema completo de gestão para barbearias" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Barbeflow" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
+
+  <body>
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('barbeflow_theme');
+          if (t !== 'light' && t !== 'dark') t = 'light';
+          document.documentElement.classList.add(t);
+        } catch (_) {
+          document.documentElement.classList.add('light');
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
