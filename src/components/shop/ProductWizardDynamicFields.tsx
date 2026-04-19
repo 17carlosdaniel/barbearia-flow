@@ -439,6 +439,28 @@ export function ProductWizardDynamicFields({
   }
 
   if (pt === "kit") {
+    return (
+      <KitFields
+        form={form}
+        setForm={setForm}
+        barbershopId={barbershopId}
+      />
+    );
+  }
+
+  return null;
+}
+
+// ─── Subcomponente para kit (hooks no nível correto) ───────────────────────
+function KitFields({
+  form,
+  setForm,
+  barbershopId,
+}: {
+  form: ProductFormState;
+  setForm: SetForm;
+  barbershopId?: number;
+}) {
     const a = form.attributes as {
       itensIncluidos?: string;
       quantidadeItens?: number;
@@ -679,7 +701,4 @@ export function ProductWizardDynamicFields({
         />
       </div>
     );
-  }
-
-  return null;
 }
