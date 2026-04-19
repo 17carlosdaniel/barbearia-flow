@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // Headers de segurança (dev e preview). Em produção, configure no servidor (nginx/Apache).
 const securityHeaders: Record<string, string> = {
@@ -26,7 +25,7 @@ const securityHeaders: Record<string, string> = {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   server: {
     host: true, // escuta em 0.0.0.0 e :: (acessível na rede e por ngrok)
     port: 8080,
@@ -39,7 +38,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     headers: securityHeaders,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [react()],
   build: {
     rollupOptions: {
       output: {
@@ -60,4 +59,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-}));
+});
