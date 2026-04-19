@@ -10,6 +10,7 @@ import {
   MapPin,
   Menu,
   X,
+  LogIn,
   Sparkles,
   CalendarCheck,
   Wallet,
@@ -95,6 +96,24 @@ const scrollToSection = (id: string, onDone?: () => void) => {
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { identity, setIdentity } = useTheme();
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const current = window.scrollY;
+      // Esconde ao descer, mostra ao subir. Ignora os primeiros 60px.
+      if (current > lastScrollY.current && current > 60) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      lastScrollY.current = current;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const handleAnchor =
     (id: string) =>
     (e: ReactMouseEvent<HTMLAnchorElement>) => {
@@ -102,7 +121,11 @@ const Navbar = () => {
       scrollToSection(id, () => setOpen(false));
     };
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-dark">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 glass-dark transition-transform duration-300 ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
           <Scissors className="h-6 w-6 text-primary" />
@@ -179,45 +202,88 @@ const Navbar = () => {
         </div>
       </div>
       {open && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden glass-dark border-t border-border/20 px-4 py-6 flex flex-col gap-4"
-        >
-          <div className="flex gap-2">
+        <>
+          {/* Overlay escuro atrás */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[199] bg-black/50 md:hidden"
+            onClick={() => setOpen(false)}
+          />
+          {/* Painel — metade direita da tela */}
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed top-0 right-0 z-[200] flex flex-col md:hidden w-1/2 min-w-[220px] overflow-y-auto h-screen"
+            style={{ backgroundColor: identity === "vintage" ? "#080800" : "#3C83f6" }}
+          >
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 pt-10 pb-4">
+            <span className="text-xl font-bold text-white">Menu</span>
             <button
               type="button"
-              onClick={() => { setIdentity("vintage"); setOpen(false); }}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium ${
-                identity === "vintage"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground"
-              }`}
+              onClick={() => setOpen(false)}
+              className="w-9 h-9 rounded-full border-2 border-white/80 flex items-center justify-center text-white"
             >
-              Vintage
-            </button>
-            <button
-              type="button"
-              onClick={() => { setIdentity("modern"); setOpen(false); }}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium ${
-                identity === "modern"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-muted-foreground"
-              }`}
-            >
-              Moderno
+              <X className="h-5 w-5" />
             </button>
           </div>
-          <a href="#features" className="text-sm text-muted-foreground" onClick={handleAnchor("features")}>
-            Recursos
-          </a>
-          <a href="#how-it-works" className="text-sm text-muted-foreground" onClick={handleAnchor("how-it-works")}>
-            Como Funciona
-          </a>
-          <Link to="/planos" className="text-sm text-muted-foreground" onClick={() => setOpen(false)}>Planos</Link>
-          <Link to="/login"><Button variant="gold-outline" className="w-full">Entrar</Button></Link>
-          <Link to="/cadastro"><Button variant="gold" className="w-full">Cadastrar</Button></Link>
+
+          {/* Links */}
+          <div className="flex flex-col px-6 mt-2 gap-1">
+            {[
+              { label: "Recursos", action: () => { handleAnchor("features")(new MouseEvent("click") as unknown as React.MouseEvent<HTMLAnchorElement>); setOpen(false); } },
+              { label: "Como Funciona", action: () => { handleAnchor("how-it-works")(new MouseEvent("click") as unknown as React.MouseEvent<HTMLAnchorElement>); setOpen(false); } },
+              { label: "Planos", action: () => { setOpen(false); window.location.href = "/planos"; } },
+            ].map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={item.action}
+                className="text-left text-lg font-bold text-white py-4 border-b border-white/20 active:opacity-70"
+              >
+                {item.label}
+              </button>
+            ))}
+
+            {/* Tema */}
+            <div className="flex gap-2 py-4 border-b border-white/20">
+              <button
+                type="button"
+                onClick={() => { setIdentity("vintage"); setOpen(false); }}
+                className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                  identity === "vintage" ? "bg-white text-primary" : "bg-white/20 text-white"
+                }`}
+              >
+                Vintage
+              </button>
+              <button
+                type="button"
+                onClick={() => { setIdentity("modern"); setOpen(false); }}
+                className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                  identity === "modern" ? "bg-white text-primary" : "bg-white/20 text-white"
+                }`}
+              >
+                Moderno
+              </button>
+            </div>
+
+            {/* Login */}
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center gap-2 text-base font-bold text-white py-3 px-4 mt-2 rounded-xl border border-white/30 bg-white/10 active:opacity-70"
+            >
+              <LogIn className="w-5 h-5" />
+              Entrar / Login
+            </Link>
+          </div>
         </motion.div>
+        </>
       )}
     </nav>
   );
@@ -337,8 +403,8 @@ const HeroSection = () => {
               <motion.h1
                 variants={heroFade}
                 custom={1}
-                className={`font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8 tracking-tight ${
-                  identity === "vintage" ? "lg:text-[80px] text-white" : "text-foreground"
+                className={`font-display text-3xl sm:text-6xl lg:text-[73px] font-bold leading-[1.1] mb-8 tracking-tight ${
+                  identity === "vintage" ? "lg:text-[73px] text-white" : "text-foreground"
                 }`}
               >
                 {heroCopy.titleLead}
@@ -349,7 +415,7 @@ const HeroSection = () => {
               <motion.p
                 variants={heroFade}
                 custom={2}
-                className={`text-muted-foreground text-base sm:text-lg lg:text-xl mb-12 leading-relaxed ${
+                className={`text-muted-foreground text-sm sm:text-lg lg:text-xl mb-12 leading-relaxed ${
                   identity === "vintage" ? "max-w-2xl lg:mx-0 mx-auto" : "max-w-2xl mx-auto"
                 }`}
               >
@@ -432,7 +498,7 @@ const FeaturesSection = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mb-16">
             <p className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4">Capacidades</p>
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6 text-foreground">
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-6 text-foreground">
               Tudo que sua barbearia precisa para <br/>
               <span className="text-gradient-gold">operar melhor e crescer.</span>
             </h2>
@@ -616,8 +682,8 @@ const HowItWorksSection = () => {
       <section id="how-it-works" className="py-32 bg-surface border-y border-border/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-24">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight tracking-tighter text-foreground">Comece em menos de <span className="text-gradient-gold">5 minutos.</span></h2>
-            <p className="text-muted-foreground text-lg">Sem burocracia, sem instalação. Sua barbearia online hoje.</p>
+              <h2 className="text-3xl sm:text-5xl font-bold mb-6 tracking-tight tracking-tighter text-foreground">Comece em menos de <span className="text-gradient-gold">5 minutos.</span></h2>
+              <p className="text-muted-foreground text-base sm:text-lg">Sem burocracia, sem instalação. Sua barbearia online hoje.</p>
           </div>
           
           <div className="relative max-w-5xl mx-auto">

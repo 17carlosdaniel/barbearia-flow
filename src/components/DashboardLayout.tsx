@@ -124,11 +124,8 @@ const barberNav: NavItem[] = [
   },
   { label: "Notificações", path: "/barbeiro/notificacoes", iconVintage: Bell, iconModern: BellRing },
   { label: "Avaliações", path: "/barbeiro/avaliacoes", iconVintage: Star, iconModern: Award },
-  { label: "Guia", path: "/guia", iconVintage: BookOpen, iconModern: BookMarked },
   { label: "Assinatura", path: "/barbeiro/assinatura", iconVintage: CreditCard, iconModern: WalletCards },
   { label: "Perfil", path: "/barbeiro/perfil", iconVintage: User, iconModern: UserCircle },
-  { label: "Privacidade", path: "/privacidade", iconVintage: Shield, iconModern: Shield },
-  { label: "Suporte", path: "/suporte", iconVintage: HelpCircle, iconModern: CircleHelp },
 ];
 
 const clientNav: NavItem[] = [
@@ -140,10 +137,7 @@ const clientNav: NavItem[] = [
   { label: "Gift Cards", path: "/cliente/gift-cards", iconVintage: Gift, iconModern: Gift },
   { label: "Loja", path: "/cliente/loja", iconVintage: ShoppingBag, iconModern: ShoppingCart },
   { label: "Notificações", path: "/cliente/notificacoes", iconVintage: Bell, iconModern: BellRing },
-  { label: "Guia", path: "/guia", iconVintage: BookOpen, iconModern: BookMarked },
   { label: "Perfil", path: "/cliente/perfil", iconVintage: User, iconModern: UserCircle },
-  { label: "Privacidade", path: "/privacidade", iconVintage: Shield, iconModern: Shield },
-  { label: "Suporte", path: "/suporte", iconVintage: HelpCircle, iconModern: CircleHelp },
 ];
 
 const BARBER_LOGIN_INTRO_KEY = "barberflow_barber_login_intro";

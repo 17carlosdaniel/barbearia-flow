@@ -494,19 +494,20 @@ const Register = () => {
           </div>
         )}
         {user && <div className="mb-4 border-t border-border" />}
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-10 py-2 -my-1 min-h-[48px] items-center"
-        >
-          <ArrowLeft className="w-4 h-4 shrink-0" />
-          Voltar ao início
-        </Link>
-
-        <div className="flex items-center gap-3 mb-6">
-          <Scissors className="h-8 w-8 text-primary" />
-          <span className={cn("text-2xl font-bold text-gradient-gold", isVintage ? "font-vintage-heading" : "font-display")}>
-            BarberFlow
-          </span>
+        <div className="flex items-center justify-between mb-10">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors py-2 min-h-[48px]"
+          >
+            <ArrowLeft className="w-4 h-4 shrink-0" />
+            Voltar ao início
+          </Link>
+          <div className="flex items-center gap-2">
+            <span className={cn("text-2xl font-bold text-gradient-gold", isVintage ? "font-vintage-heading" : "font-display")}>
+              BarberFlow
+            </span>
+            <Scissors className="h-7 w-7 text-primary" />
+          </div>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: "easeOut" }}>
@@ -516,12 +517,9 @@ const Register = () => {
               isVintage ? "font-vintage-heading" : "font-display",
             )}
           >
-            Crie sua conta e comece a encher sua agenda
+            Cadastre-se:
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base mt-2 mb-5">
-            {userType === "barbeiro"
-              ? "Leva menos de 2 minutos para configurar sua barbearia."
-              : "Crie sua conta e comece a receber agendamentos hoje."}
           </p>
         </motion.div>
 
@@ -543,7 +541,6 @@ const Register = () => {
               <span>Continuar com Google</span>
             </Button>
             <p className="mt-2 text-xs text-muted-foreground">
-              Na produção, a integração Google será ativada por completo.
             </p>
           </div>
         )}
@@ -554,8 +551,7 @@ const Register = () => {
           </p>
         )}
 
-        {/* Quem está criando a conta */}
-        <p className="text-sm font-medium text-foreground mb-2">Quem está criando a conta?</p>
+        {/* Seletor de tipo de conta */}
         <div className="relative mb-6">
           <div className="absolute inset-0 rounded-xl bg-background/60 border border-border/70 backdrop-blur-xl shadow-[0_18px_60px_rgba(0,0,0,0.65)]" />
           <div className="relative grid grid-cols-2 gap-1 p-1">
@@ -1316,16 +1312,17 @@ const Register = () => {
                 </div>
               </motion.div>
             )}
+            
+            <p className="mt-4 text-sm text-muted-foreground text-center w-full">
+              Já tem uma conta?{" "}
+              <Link to="/login" className="text-[hsl(var(--gold))] font-medium hover:underline underline-offset-2 transition-colors text-base">
+                Entrar
+              </Link>
+            </p>
             </motion.form>
           </AnimatePresence>
         </div>
 
-        <p className="mt-8 text-sm text-muted-foreground">
-          Já tem uma conta?{" "}
-          <Link to="/login" className="text-[hsl(var(--gold))] font-medium hover:underline underline-offset-2 transition-colors text-base">
-            Entrar
-          </Link>
-        </p>
         <div className="mt-3 text-xs text-muted-foreground flex flex-wrap gap-2">
           <Link to="/termos" className="hover:text-[hsl(var(--gold))] hover:underline">Termos de Uso</Link>
           <span>•</span>

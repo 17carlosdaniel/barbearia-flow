@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import ClientHomeIntro from "@/components/client-home/ClientHomeIntro";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientHeroBanner from "@/components/client-home/ClientHeroBanner";
 import NextAppointmentCard, {
   type NextAppointmentData,
@@ -48,9 +49,11 @@ const ClientDashboard = () => {
   const isVintage = identity === "vintage";
   const homeCopy = getClientHomeCopy(identity);
 
+  const CLIENT_HOME_INTRO_SEEN_KEY_USER = `${CLIENT_HOME_INTRO_SEEN_KEY}_${user?.id ?? "guest"}`;
+
   const [introVisible, setIntroVisible] = useState<boolean>(() => {
     try {
-      return localStorage.getItem(CLIENT_HOME_INTRO_SEEN_KEY) !== "1";
+      return localStorage.getItem(`${CLIENT_HOME_INTRO_SEEN_KEY}_${user?.id ?? "guest"}`) !== "1";
     } catch {
       return true;
     }
@@ -68,35 +71,40 @@ const ClientDashboard = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const finishIntroAndMarkSeen = () => {
-    setIntroVisible(false);
+  const markIntroSeen = () => {
     try {
-      localStorage.setItem(CLIENT_HOME_INTRO_SEEN_KEY, "1");
+      localStorage.setItem(CLIENT_HOME_INTRO_SEEN_KEY_USER, "1");
     } catch {
       // noop
     }
+    setIntroVisible(false);
   };
 
   const handleFinishIntro = (payload: { locationStatus: "granted" | "denied" | "unavailable" | "skipped" }) => {
-    finishIntroAndMarkSeen();
-    navigate("/cliente/buscar", {
-      state: {
-        fromClientIntro: true,
-        introGeoStatus: payload.locationStatus,
-      },
-    });
+    markIntroSeen();
+    // pequeno delay para garantir que o estado foi salvo antes de navegar
+    setTimeout(() => {
+      navigate("/cliente/buscar", {
+        state: {
+          fromClientIntro: true,
+          introGeoStatus: payload.locationStatus,
+        },
+      });
+    }, 50);
   };
 
   return (
     <DashboardLayout userType="cliente">
       <AnimatePresence mode="wait">
         {introVisible ? (
-          <ClientHomeIntro
-            key="client-home-intro"
-            firstName={firstName}
-            onSkip={finishIntroAndMarkSeen}
-            onFinish={handleFinishIntro}
-          />
+          <ErrorBoundary key="intro-boundary" onDomMutationError={markIntroSeen}>
+            <ClientHomeIntro
+              key="client-home-intro"
+              firstName={firstName}
+              onSkip={markIntroSeen}
+              onFinish={handleFinishIntro}
+            />
+          </ErrorBoundary>
         ) : (
           <motion.div
             key="content"
